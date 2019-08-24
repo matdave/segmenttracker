@@ -3,7 +3,7 @@
     "lowCaseName": "segmenttracker",
     "description": "Segment Tracking for MODX",
     "author": "matdave",
-    "version": "0.0.1-beta1",
+    "version": "1.0.0-beta1",
     "package": {
       "elements": {
         "snippets": [
@@ -44,6 +44,11 @@
           "type" : "combo-boolean",
           "value": "1"
         }
-      ]
+      ],
+      "build": {
+        "readme": "docs/readme.txt",
+        "license": "docs/license.txt",
+        "changelog": "docs/changelog.txt"
+      }
     }
   }

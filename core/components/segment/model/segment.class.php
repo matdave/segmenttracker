@@ -41,6 +41,7 @@ class segment {
             'corePath' => $corePath,
             'modelPath' => $corePath . 'model/',
             'snippetPath' => $corePath . 'elements/snippets/',
+            'pluginPath' => $corePath . 'elements/plugin/',
         ), $config);
         $this->modxUserId = $this->getOption('use_modx_id', $config, true);
         $this->modx->addPackage('segment', $this->config['modelPath']);
