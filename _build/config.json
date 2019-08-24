@@ -1,6 +1,6 @@
 {
-    "name": "SegmentTracker",
-    "lowCaseName": "segmenttracker",
+    "name": "Segment",
+    "lowCaseName": "segment",
     "description": "Segment Tracking for MODX",
     "author": "matdave",
     "version": "1.0.0-beta1",
