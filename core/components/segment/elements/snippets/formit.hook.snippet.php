@@ -16,7 +16,7 @@ $corePath = $modx->getOption('segment.core_path', null, $modx->getOption('core_p
 $segment = $modx->getService(
     'segment', 
     'segment', 
-    $corePath . '/model/segment/', 
+    $corePath . 'model/segment/', 
     array('core_path' => $corePath)
 );
 
