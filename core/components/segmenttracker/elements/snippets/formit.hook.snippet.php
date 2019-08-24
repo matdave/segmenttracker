@@ -15,12 +15,12 @@ $debug = $modx->getOption('segmentDebug', $hook->formit->config, false);
 $corePath = $modx->getOption('segmenttracker.core_path', null, $modx->getOption('core_path') . 'components/segmenttracker/');
 $segment = $modx->getService(
     'segmenttracker', 
-    'segmenttracker', 
+    'segmentTracker', 
     $corePath . 'model/segmenttracker/', 
     array('core_path' => $corePath)
 );
 
-if (!($segment instanceof segmenttracker)) {
+if (!($segment instanceof segmentTracker)) {
     $modx->log(xPDO::LOG_LEVEL_ERROR, '[Segment.FormIt.Hook] Could not load segment class.');
     if($debug){
         $hook->addError('segment', 'Could not load Segment class.');

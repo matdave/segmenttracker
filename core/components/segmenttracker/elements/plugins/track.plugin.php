@@ -2,12 +2,12 @@
 $corePath = $modx->getOption('segmenttracker.core_path', null, $modx->getOption('core_path') . 'components/segmenttracker/');
 $segment = $modx->getService(
     'segmenttracker', 
-    'segmenttracker', 
+    'segmentTracker', 
     $corePath . 'model/segmenttracker/', 
     array('core_path' => $corePath)
 );
 
-if ( !($segment instanceof segmenttracker) ) {
+if ( !($segment instanceof segmentTracker) ) {
     $modx->log(xPDO::LOG_LEVEL_ERROR, '[SegmentTrack Plugin] Could not load segment class.');
     return;
 }

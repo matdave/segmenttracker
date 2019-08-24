@@ -1,6 +1,6 @@
 <?php
 
-class segmenttracker {
+class segmentTracker {
     /**
      * @var modX|null $modx
      */
