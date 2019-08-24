@@ -1,4 +1,10 @@
 <?php
+/**
+ * SegmentTrackPlugin
+ *
+ * Tracks a users login, logout, and profile save events
+ * 
+  */
 $corePath = $modx->getOption('segmenttracker.core_path', null, $modx->getOption('core_path') . 'components/segmenttracker/');
 $segment = $modx->getService(
     'segmenttracker',

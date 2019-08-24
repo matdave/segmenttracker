@@ -1,4 +1,14 @@
 <?php
+/**
+ * SegmentTrack
+ *
+ * Add this snippet to a page or call via runSnippet to add segment tracking to interactions.
+ *
+ * Properties:
+ *   event (string) - A specified event to track (required)
+ *   properties (mixed) - Track additional field value pairs either as a passed array array('property1'=>'value1'), a comma-separated string `property1==value1`, or json `{"property1":"value1"}`. 
+ *   identity (mixed) - Add identity field value pairs either as a passed array array('id'=>'modx_1','name'=>'Full Name'), a comma-separated string `id==modx_1,name==Full Name`, or json `{"id":"modx_1","name":"Full Name"}`.
+  */
 $corePath = $modx->getOption('segmenttracker.core_path', null, $modx->getOption('core_path') . 'components/segmenttracker/');
 $segment = $modx->getService(
     'segmenttracker',
