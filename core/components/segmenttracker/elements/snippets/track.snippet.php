@@ -38,7 +38,7 @@ if(!is_array($properties)){
 }
 
 if(!$segment->track($event, $properties)){
-    $modx->log(xPDO::LOG_LEVEL_ERROR, '[SegmentTrack] Could not track event '.$event.'.');
+    $modx->log(xPDO::LOG_LEVEL_ERROR, '[SegmentTrack] Could not track event '.$event.'. '.json_encode($properties));
     return;
 }
 

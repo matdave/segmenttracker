@@ -76,7 +76,7 @@ class segmentTracker {
         }
     }
 
-    public function getAnonymousId(){
+    public function getanonymousId(){
         if(!$this->anonymousId){
             $cookie = $this->cleanCookie('ajs_anonymous_id');
             if($cookie){
@@ -133,13 +133,16 @@ class segmentTracker {
      */
 
     public function track($event = null, $properties = array()){
-        if(!$this->authenticate || !$event) return false;
+        if(!$this->authenticate() || !$event) return false;
         $track = array('event'=>$event, 'properties'=>$properties, 'timestamp'=>mktime());
         $this->getUserId();
+        $this->getanonymousId();
         if($this->userId){
             $track['userId'] = $this->userId;
+            if($this->anonymousId){
+                $this->alias($this->anonymousId, $this->userId);
+            }
         }else{
-            $this->getAnonymousId();
             $track['anonymousId'] = $this->anonymousId;
         }
         return Segment::track($track);
@@ -152,10 +155,14 @@ class segmentTracker {
      */
 
     public function trackUser($event = null, $username = null, $userid = 0){
-        if(!$this->authenticate || !$event || !$username || $userid < 1) return false;
-        $track = array('event'=>$event, 'username'=>$properties, 'timestamp'=>mktime(), 'context' => array('groupId' => $userid)); 
-        if($this->userId){
-            $track['userId'] = $this->userId;
+        if(!$this->authenticate() || !$event || !$username || $userid < 1) return false;
+        $track = array('event'=>$event, 'username'=>$properties, 'timestamp'=>mktime(), 'context' => array('groupId' => $userid));
+        $this->getanonymousId();
+        if($userid){
+            $track['userId'] = $userid;
+            if($this->anonymousId){
+                $this->alias($this->anonymousId, $userid);
+            }
         }
         return Segment::track($track);
     }
@@ -165,7 +172,7 @@ class segmentTracker {
      */
 
     public function identify($user = array()){
-        if(!is_array($user)) return false;
+        if(!$this->authenticate() || !is_array($user)) return false;
         $identify = array('timestamp'=>mktime());
         $this->getUserId();
         if($this->userId){
@@ -178,7 +185,7 @@ class segmentTracker {
         }elseif($user['id']){
             $identify['userId'] = $user['id'];
         }else{
-            $this->getAnonymousId();
+            $this->anonymousId();
             $identify['anonymousId'] = $this->anonymousId;
         }
         unset($user['id']);
