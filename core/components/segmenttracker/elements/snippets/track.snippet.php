@@ -1,13 +1,13 @@
 <?php
-$corePath = $modx->getOption('segment.core_path', null, $modx->getOption('core_path') . 'components/segment/');
+$corePath = $modx->getOption('segmenttracker.core_path', null, $modx->getOption('core_path') . 'components/segmenttracker/');
 $segment = $modx->getService(
-    'segment', 
-    'segment', 
-    $corePath . 'model/segment/', 
+    'segmenttracker', 
+    'segmenttracker', 
+    $corePath . 'model/segmenttracker/', 
     array('core_path' => $corePath)
 );
 
-if (!($segment instanceof segment)) {
+if (!($segment instanceof segmenttracker)) {
     $modx->log(xPDO::LOG_LEVEL_ERROR, '[SegmentTrack] Could not load segment class.');
     return;
 }

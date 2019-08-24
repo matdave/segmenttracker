@@ -1,6 +1,6 @@
 <?php
 
-class segment {
+class segmenttracker {
     /**
      * @var modX|null $modx
      */
@@ -12,7 +12,7 @@ class segment {
     /**
      * @var string
      */
-    public $namespace = 'segment';
+    public $namespace = 'segmenttracker';
     /**
      * @var string
      */
@@ -35,7 +35,7 @@ class segment {
     {
         
         $this->modx =& $modx;
-        $corePath = $this->modx->getOption('segment.core_path', $config, $this->modx->getOption('core_path') . 'components/segment/');
+        $corePath = $this->modx->getOption('segmenttracker.core_path', $config, $this->modx->getOption('core_path') . 'components/segmenttracker/');
         $this->config = array_merge(array(
             'basePath' => $this->modx->getOption('base_path'),
             'corePath' => $corePath,
@@ -44,7 +44,7 @@ class segment {
             'pluginPath' => $corePath . 'elements/plugin/',
         ), $config);
         $this->modxUserId = $this->getOption('use_modx_id', $config, true);
-        $this->modx->addPackage('segment', $this->config['modelPath']);
+        $this->modx->addPackage('segmenttracker', $this->config['modelPath']);
         $this->autoload();
     }
 

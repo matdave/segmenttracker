@@ -12,15 +12,15 @@
  *   segmentIdentifyFields (string) - Add identity fields from your form to a user in Segment. Works similarly to segmentTrackFields.
   */
 $debug = $modx->getOption('segmentDebug', $hook->formit->config, false);
-$corePath = $modx->getOption('segment.core_path', null, $modx->getOption('core_path') . 'components/segment/');
+$corePath = $modx->getOption('segmenttracker.core_path', null, $modx->getOption('core_path') . 'components/segmenttracker/');
 $segment = $modx->getService(
-    'segment', 
-    'segment', 
-    $corePath . 'model/segment/', 
+    'segmenttracker', 
+    'segmenttracker', 
+    $corePath . 'model/segmenttracker/', 
     array('core_path' => $corePath)
 );
 
-if (!($segment instanceof segment)) {
+if (!($segment instanceof segmenttracker)) {
     $modx->log(xPDO::LOG_LEVEL_ERROR, '[Segment.FormIt.Hook] Could not load segment class.');
     if($debug){
         $hook->addError('segment', 'Could not load Segment class.');
