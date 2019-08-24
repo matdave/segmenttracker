@@ -1,6 +1,8 @@
 # Segment Tracker for MODX
 
-This package contains options for tracking MODX user interactions in Segment. 
+This package contains options for tracking MODX user interactions in Segment. To signup for Segment visit https://segment.com/. 
+
+This package assumes you have the Segment javascript tracking code enabled on the frontend of your site. 
 
 ## Snippets
 
