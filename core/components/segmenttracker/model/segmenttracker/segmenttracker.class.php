@@ -102,9 +102,8 @@ class segmentTracker
             $cookie = $_COOKIE['_ga'];
             if (isset($cookie)
                 && $cookie
-                && is_array($cookie)
             ) {
-                $this->googleId = $cookie[2].'.'.$cookie[3];
+                $this->googleId = (is_array($cookie)) ? $cookie[2].'.'.$cookie[3] : str_replace('GA1.2.', '', $cookie);
             }
         }
     }
