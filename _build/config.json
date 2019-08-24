@@ -1,0 +1,49 @@
+{
+    "name": "SegmentTracker",
+    "lowCaseName": "segmenttracker",
+    "description": "Segment Tracking for MODX",
+    "author": "matdave",
+    "version": "0.0.1-beta1",
+    "package": {
+      "elements": {
+        "snippets": [
+          {
+            "name": "Segment.FormIt.Hook",
+            "file": "formit.hook.snippet.php"
+          },
+          {
+            "name": "SegmentTrack",
+            "file": "track.snippet.php"
+          }
+        ],
+        "plugins": [
+          {
+            "name": "SegmentTrackPlugin",
+            "file": "track.plugin.php",
+            "events": [
+              "OnWebLogin",
+              "OnWebLogout",
+              "OnUserBeforeSave"
+            ]
+          }
+        ]
+      },
+      "systemSettings": [
+        {
+          "key": "write_key",
+          "type": "text-password",
+          "value": ""
+        },
+        {
+          "key": "prefix_modx_id",
+          "type": "text",
+          "value": ""
+        },
+        {
+          "key": "use_modx_id",
+          "type" : "combo-boolean",
+          "value": "1"
+        }
+      ]
+    }
+  }
