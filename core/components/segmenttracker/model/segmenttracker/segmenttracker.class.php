@@ -1,6 +1,7 @@
 <?php
 
-class segmentTracker {
+class segmentTracker
+{
     /**
      * @var modX|null $modx
      */
@@ -29,11 +30,14 @@ class segmentTracker {
      * @var string
      */
     public $anonymousId = null;
+    /**
+     * @var string
+     */
+    public $googleId = null;
 
 
-    function __construct(modX &$modx, array $config = array())
+    public function __construct(modX &$modx, array $config = array())
     {
-        
         $this->modx =& $modx;
         $corePath = $this->modx->getOption('segmenttracker.core_path', $config, $this->modx->getOption('core_path') . 'components/segmenttracker/');
         $this->config = array_merge(array(
@@ -48,42 +52,59 @@ class segmentTracker {
         $this->autoload();
     }
 
-    private function autoload() {
+    private function autoload()
+    {
         require_once $this->config['corePath'].'model/vendor/autoload.php';
     }
 
-    private function authenticate() {
+    private function authenticate()
+    {
         $writeKey = $this->getOption('write_key', $this->config, null);
         if ($writeKey) {
             class_alias('Segment', 'Analytics');
             Segment::init($writeKey);
             return true;
-        }else{
+        } else {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[Segment] No write key found.');
         }
         return false;
     }
 
-    public function getUserId(){
-        if(!$this->userId){
+    public function getUserId()
+    {
+        if (!$this->userId) {
             $cookie = $this->cleanCookie('ajs_user_id');
-            if($cookie){
-                $this->anonymousId = $cookie;
-            }elseif($this->modxUserId && !empty($this->modx->user) && $this->modx->user->id != 0){
+            if ($cookie) {
+                $this->userId = $cookie;
+            } elseif ($this->modxUserId && !empty($this->modx->user) && $this->modx->user->id != 0) {
                 $prefix = $this->getOption('prefix_modx_id', $this->config, null);
                 $this->userId = $prefix.$this->modx->user->id;
             }
         }
     }
 
-    public function getanonymousId(){
-        if(!$this->anonymousId){
+    public function getAnonymousId()
+    {
+        if (!$this->anonymousId) {
             $cookie = $this->cleanCookie('ajs_anonymous_id');
-            if($cookie){
+            if ($cookie) {
                 $this->anonymousId = $cookie;
-            }elseif(isset($_COOKIE[session_name()])){
+            } elseif (isset($_COOKIE[session_name()])) {
                 $prefix = $this->getOption('prefix_modx_id', $this->config, null);
                 $this->anonymousId = $prefix.$_COOKIE[session_name()];
+            }
+        }
+    }
+
+    public function getGoogleId()
+    {
+        if (!$this->googleId) {
+            $cookie = $_COOKIE['_ga'];
+            if (isset($cookie)
+                && $cookie
+                && is_array($cookie)
+            ) {
+                $this->googleId = $cookie[2].'.'.$cookie[3];
             }
         }
     }
@@ -92,11 +113,21 @@ class segmentTracker {
      * @param string $cookie name of the cookie to clean up
      */
 
-    private function cleanCookie($cookie = null){
-        if(isset($_COOKIE[$cookie])
-            && $_COOKIE[$cookie] 
-            && $_COOKIE[$cookie] !== "null"){
-                return str_replace('"','',str_replace('%22','',$_COOKIE[$cookie]));
+    private function cleanCookie($cookie = null)
+    {
+        if (isset($_COOKIE[$cookie])
+            && $_COOKIE[$cookie]
+            && $_COOKIE[$cookie] !== "null"
+        ) {
+            return str_replace(
+                '"',
+                '',
+                str_replace(
+                    '%22',
+                    '',
+                    $_COOKIE[$cookie]
+                )
+            );
         }
         return '';
     }
@@ -106,23 +137,24 @@ class segmentTracker {
      * @param array $values array("key1"=>"value1")
      */
     
-    public function getProperties($fields = null, $values = array()){
+    public function getProperties($fields = null, $values = array())
+    {
         $properties = array();
-        if(!is_array($fields)){
+        if (!is_array($fields)) {
             $fieldsNew = array();
-            $fields = explode(',',$fields);
-            foreach($fields as $field){
-                $field = explode('==',$field);
+            $fields = explode(',', $fields);
+            foreach ($fields as $field) {
+                $field = explode('==', $field);
                 $fiedsNew[$field[0]] = ($field[1]) ? $field[1] : $field[0];
             }
             $fields = $fieldsNew;
         }
-        if(!empty($fields)){
-            foreach($fields as $k => $v){
+        if (!empty($fields)) {
+            foreach ($fields as $k => $v) {
                 $properties[$v] = $values[$k];
             }
             return $properties;
-        }else{
+        } else {
             return $values;
         }
     }
@@ -132,18 +164,25 @@ class segmentTracker {
      * @param array $properties array("property1"=>"value1")
      */
 
-    public function track($event = null, $properties = array()){
-        if(!$this->authenticate() || !$event) return false;
+    public function track($event = null, $properties = array())
+    {
+        if (!$this->authenticate() || !$event) {
+            return false;
+        }
         $track = array('event'=>$event, 'properties'=>$properties, 'timestamp'=>mktime());
         $this->getUserId();
-        $this->getanonymousId();
-        if($this->userId){
+        $this->getAnonymousId();
+        if ($this->userId) {
             $track['userId'] = $this->userId;
-            if($this->anonymousId){
+            if ($this->anonymousId) {
                 $this->alias($this->anonymousId, $this->userId);
             }
-        }else{
+        } else {
             $track['anonymousId'] = $this->anonymousId;
+        }
+        $this->getGoogleId();
+        if ($this->googleId) {
+            $track['context'] = array('Google Analytics' => array('clientId' => $this->googleId));
         }
         return Segment::track($track);
     }
@@ -154,15 +193,22 @@ class segmentTracker {
      * @param string $userid (required)
      */
 
-    public function trackUser($event = null, $username = null, $userid = 0){
-        if(!$this->authenticate() || !$event || !$username || $userid < 1) return false;
+    public function trackUser($event = null, $username = null, $userid = 0)
+    {
+        if (!$this->authenticate() || !$event || !$username || $userid < 1) {
+            return false;
+        }
         $track = array('event'=>$event, 'username'=>$properties, 'timestamp'=>mktime(), 'context' => array('groupId' => $userid));
-        $this->getanonymousId();
-        if($userid){
-            $track['userId'] = $userid;
-            if($this->anonymousId){
-                $this->alias($this->anonymousId, $userid);
+        $this->getAnonymousId();
+        if ($this->userId) {
+            $track['userId'] = $this->userId;
+            if ($this->userId != $userid) {
+                $this->alias($userid, $this->userId);
             }
+        }
+        $this->getGoogleId();
+        if ($this->googleId) {
+            $track['context']['Google Analytics'] = array('clientId' => $this->googleId);
         }
         return Segment::track($track);
     }
@@ -171,25 +217,30 @@ class segmentTracker {
      * @param array $user array of properties to identify, include "id" to set a trackable id in your system
      */
 
-    public function identify($user = array()){
-        if(!$this->authenticate() || !is_array($user)) return false;
+    public function identify($user = array())
+    {
+        if (!$this->authenticate() || !is_array($user)) {
+            return false;
+        }
         $identify = array('timestamp'=>mktime());
         $this->getUserId();
-        if($this->userId){
-            if($user['id'] && $this->userId != $user['id']){
+        if ($this->userId) {
+            if ($user['id'] && $this->userId != $user['id']) {
                 $identify['userId'] = $user['id'];
                 $this->alias($this->userId, $user['id']);
-            }else{
+            } else {
                 $identify['userId'] = $this->userId;
             }
-        }elseif($user['id']){
+        } elseif ($user['id']) {
             $identify['userId'] = $user['id'];
-        }else{
+        } else {
             $this->anonymousId();
             $identify['anonymousId'] = $this->anonymousId;
         }
         unset($user['id']);
-        if(empty($user)) return false;
+        if (empty($user)) {
+            return false;
+        }
         $identify['traits'] = $user;
         return Segment::identify($identify);
     }
@@ -199,8 +250,9 @@ class segmentTracker {
      * @param string $userId (required)
      */
 
-    public function alias($previousId = null, $userId = null){
-        if($previousId && $userId){
+    public function alias($previousId = null, $userId = null)
+    {
+        if ($previousId && $userId) {
             Segment::alias(array(
                 "previousId" => $previousId,
                 "userId" => $userId
@@ -228,5 +280,4 @@ class segmentTracker {
         }
         return $option;
     }
-
 }
