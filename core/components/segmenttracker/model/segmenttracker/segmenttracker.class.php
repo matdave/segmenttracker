@@ -144,7 +144,7 @@ class segmentTracker
             $fields = explode(',', $fields);
             foreach ($fields as $field) {
                 $field = explode('==', $field);
-                $fiedsNew[$field[0]] = ($field[1]) ? $field[1] : $field[0];
+                $fieldsNew[$field[0]] = ($field[1]) ? $field[1] : $field[0];
             }
             $fields = $fieldsNew;
         }

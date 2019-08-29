@@ -51,20 +51,20 @@ if (empty($event)) {
 }
 
 //Process properties
-$properties = $values;
+$properties = array();
 if ($hook->formit->config['segmentTrackFields']) {
     $properties = $segment->getProperties($hook->formit->config['segmentTrackFields'], $values);
 }
 
 //Identify user if fields specified
-if ($hook->formit->config['segementIdentifyFields']) {
-    $user = $segment->getProperties($hook->formit->config['segementIdentifyFields'], $values);
+if ($hook->formit->config['segmentIdentifyFields']) {
+    $user = $segment->getProperties($hook->formit->config['segmentIdentifyFields'], $values);
     if (!empty($user) && !$segment->identify($user)) {
         $modx->log(xPDO::LOG_LEVEL_ERROR, '[Segment.FormIt.Hook] Unable to identify user: '.json_encode($user));
     }
 }
 
-if ($segment->track($event)) {
+if ($segment->track($event, $properties)) {
     return true;
 } else {
     $modx->log(xPDO::LOG_LEVEL_ERROR, '[Segment.FormIt.Hook] Unable to track event.');
