@@ -233,7 +233,7 @@ class segmentTracker
         } elseif ($user['id']) {
             $identify['userId'] = $user['id'];
         } else {
-            $this->anonymousId();
+            $this->getAnonymousId();
             $identify['anonymousId'] = $this->anonymousId;
         }
         unset($user['id']);
