@@ -1,5 +1,9 @@
 Changelog for SegmentTracker
 
+segmenttracker 1.0.0-beta3
+==============
+- Fix incorrect method called error
+
 segmenttracker 1.0.0-beta2
 ==============
 - Fix issues with formit hook not tracking properties
