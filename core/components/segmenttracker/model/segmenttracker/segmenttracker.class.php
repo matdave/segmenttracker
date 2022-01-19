@@ -223,6 +223,7 @@ class segmentTracker
         }
         $identify = array('timestamp'=>mktime());
         $this->getUserId();
+        $this->getAnonymousId();
         if ($this->userId) {
             if ($user['id'] && $this->userId != $user['id']) {
                 $identify['userId'] = $user['id'];
@@ -232,9 +233,11 @@ class segmentTracker
             }
         } elseif ($user['id']) {
             $identify['userId'] = $user['id'];
-        } else {
+        } elseif ($this->anonymousId) {
             $this->getAnonymousId();
             $identify['anonymousId'] = $this->anonymousId;
+        } else {
+            return false;
         }
         unset($user['id']);
         if (empty($user)) {
