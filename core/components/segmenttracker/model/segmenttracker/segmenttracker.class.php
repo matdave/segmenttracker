@@ -176,8 +176,10 @@ class segmentTracker
             if ($this->anonymousId) {
                 $this->alias($this->anonymousId, $this->userId);
             }
-        } else {
+        } elseif ($this->anonymousId) {
             $track['anonymousId'] = $this->anonymousId;
+        } else {
+            return false;
         }
         $this->getGoogleId();
         if ($this->googleId) {
