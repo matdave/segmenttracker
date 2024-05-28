@@ -168,7 +168,7 @@ class segmentTracker
         if (!$this->authenticate() || !$event) {
             return false;
         }
-        $track = array('event'=>$event, 'properties'=>$properties, 'timestamp'=>mktime());
+        $track = array('event'=>$event, 'properties'=>$properties, 'timestamp'=>time());
         $this->getUserId();
         $this->getAnonymousId();
         if ($this->userId) {
@@ -199,7 +199,7 @@ class segmentTracker
         if (!$this->authenticate() || !$event || !$username || $userid < 1) {
             return false;
         }
-        $track = array('event'=>$event, 'username'=>$properties, 'timestamp'=>mktime(), 'context' => array('groupId' => $userid));
+        $track = array('event'=>$event, 'username'=>$properties, 'timestamp'=>time(), 'context' => array('groupId' => $userid));
         $this->getAnonymousId();
         if ($this->userId) {
             $track['userId'] = $this->userId;
@@ -223,7 +223,7 @@ class segmentTracker
         if (!$this->authenticate() || !is_array($user)) {
             return false;
         }
-        $identify = array('timestamp'=>mktime());
+        $identify = array('timestamp'=>time());
         $this->getUserId();
         $this->getAnonymousId();
         if ($this->userId) {
