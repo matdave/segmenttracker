@@ -61,7 +61,7 @@ class segmentTracker
     {
         $writeKey = $this->getOption('write_key', $this->config, null);
         if ($writeKey) {
-            class_alias('Segment', 'Analytics');
+            class_alias(\Segment\Segment::class, 'Analytics');
             \Segment\Segment::init($writeKey);
             return true;
         } else {
