@@ -62,7 +62,7 @@ class segmentTracker
         $writeKey = $this->getOption('write_key', $this->config, null);
         if ($writeKey) {
             class_alias('Segment', 'Analytics');
-            Segment::init($writeKey);
+            \Segment\Segment::init($writeKey);
             return true;
         } else {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[Segment] No write key found.');
@@ -185,33 +185,35 @@ class segmentTracker
         if ($this->googleId) {
             $track['context'] = array('Google Analytics' => array('clientId' => $this->googleId));
         }
-        return Segment::track($track);
+        return \Segment\Segment::track($track);
     }
 
     /**
-     * @param string $event (required)
-     * @param string $username (required)
+     * @param string|null $event (required)
+     * @param string|null $username (required)
      * @param string $userid (required)
      */
 
-    public function trackUser($event = null, $username = null, $userid = 0)
+    public function trackUser(string $event = null, string $username = null, $userid = 0)
     {
         if (!$this->authenticate() || !$event || !$username || $userid < 1) {
             return false;
         }
-        $track = array('event'=>$event, 'username'=>$properties, 'timestamp'=>time(), 'context' => array('groupId' => $userid));
-        $this->getAnonymousId();
+        $track = array('event'=>$event, 'username'=>$username, 'timestamp'=>time(), 'context' => array('groupId' => $userid));
+        $this->getUserId();
         if ($this->userId) {
             $track['userId'] = $this->userId;
             if ($this->userId != $userid) {
                 $this->alias($userid, $this->userId);
             }
+        } else {
+            $track['anonymousId'] = $userid;
         }
         $this->getGoogleId();
         if ($this->googleId) {
             $track['context']['Google Analytics'] = array('clientId' => $this->googleId);
         }
-        return Segment::track($track);
+        return \Segment\Segment::track($track);
     }
 
     /**
@@ -246,7 +248,7 @@ class segmentTracker
             return false;
         }
         $identify['traits'] = $user;
-        return Segment::identify($identify);
+        return \Segment\Segment::identify($identify);
     }
 
     /**
@@ -257,7 +259,7 @@ class segmentTracker
     public function alias($previousId = null, $userId = null)
     {
         if ($previousId && $userId) {
-            Segment::alias(array(
+            \Segment\Segment::alias(array(
                 "previousId" => $previousId,
                 "userId" => $userId
             ));

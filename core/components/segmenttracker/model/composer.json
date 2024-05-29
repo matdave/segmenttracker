@@ -1,5 +1,5 @@
 {
     "require": {
-        "segmentio/analytics-php": "^1.5"
+        "segmentio/analytics-php": "^3.8"
     }
 }
